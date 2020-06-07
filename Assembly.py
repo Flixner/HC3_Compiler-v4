@@ -18,7 +18,7 @@ class Assembly():
         self.Code.append(label)
 
     def AppendAssembly(self, assembly):
-        self.Code = self.Code + assembly.Code;
+        self.Code = self.Code + assembly.Code
 
     def __str__(self):
         return self.ToString

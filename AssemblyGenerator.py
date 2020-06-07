@@ -25,7 +25,7 @@ class AssemblyGenerator(object):
 
         print("getting Functions")
         funcVisit = FunctionVisitor(gblVisit.Variables)
-        funcVisit.visit(ast);
+        funcVisit.visit(ast)
 
         print('appending default starting Assembly')
         self.Assembly.AppendDirective(Directive('instructionsize 16'))

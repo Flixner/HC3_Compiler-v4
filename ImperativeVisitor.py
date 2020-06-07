@@ -24,7 +24,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
 
     def generic_visit(self, node):
         # raise Exceptino
-        print(node)
+        #print(node)
         raise Exception(str(node.coord) + ": ERROR: Unimplemented Operator")
 
     def visit_Decl(self, node):
