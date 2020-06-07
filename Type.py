@@ -13,7 +13,7 @@ class Type:
     @staticmethod
     def FromDecl(decl):
         name = decl.type.type.names[0]
-        if name not in ['short', 'float', 'void']:
+        if name not in ['short', 'float', 'void', 'char']:
             raise Exception('ERROR: invalid Datatype: ' + name + ' @' + str(decl.coord))
 
         return Type(name)
@@ -23,3 +23,6 @@ class Type:
 
     def IsVoid(self):
         return self.Name == 'void'
+
+    def IsChar(self):
+        return self.Name == 'char'
