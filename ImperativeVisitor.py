@@ -24,7 +24,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
 
     def generic_visit(self, node):
         # raise Exceptino
-        print(node)
+        #print(node)
         raise Exception(str(node.coord) + ": ERROR: Unimplemented Operator")
 
     def visit_Decl(self, node):
@@ -309,9 +309,14 @@ class ImperativeVisitor(c_ast.NodeVisitor):
 
     def visit_Constant(self, node):
         # ToDo: ggf.  split into two 16bit Values
-
+        
         floating = ('.' in node.value) or ('f' in node.value)
-        if floating:
+        if node.type == 'char':
+            self.Assembly.AppendInstruction(Instruction('LUI', ['r22', ord(node.value[1])], '    load Constant'))
+            self.Assembly.AppendInstruction(Instruction('LLI', ['r22', ord(node.value[1])], '    load Constant'))
+            self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r22'], 'move to expected position'))
+            return Type('char')
+        elif floating:
             self.Assembly.AppendInstruction(
                 Instruction('LUI', ['f0', float16_to_binint(node.value)], '     load Constant'))
             self.Assembly.AppendInstruction(
