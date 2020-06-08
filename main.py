@@ -7,7 +7,7 @@ from pycparser import c_parser
 
 from AssemblyGenerator import *
 
-# Präprozessor import
+# Präprozessor import 
 import PreProcessor
 
 def main():
@@ -26,7 +26,6 @@ def main():
     input_file_path = "testfiles/test_compilerSimple.c"
     #--------------------------------------------------
 
-    print("Hallo Hell")
     if not input_file_path.endswith('.c'):
         print('ERROR: invalid Filetype - only .c allowed\n')
         return
