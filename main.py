@@ -7,7 +7,7 @@ from pycparser import c_parser
 
 from AssemblyGenerator import *
 
-# Präprozessor import
+# Präprozessor import 
 import PreProcessor
 
 def main():

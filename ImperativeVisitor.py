@@ -312,8 +312,8 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         
         floating = ('.' in node.value) or ('f' in node.value)
         if node.type == 'char':
-            self.Assembly.AppendInstruction(Instruction('LUI', ['r22', ord(node.value[1])], '    load Constant'))
-            self.Assembly.AppendInstruction(Instruction('LLI', ['r22', ord(node.value[1])], '    load Constant'))
+            self.Assembly.AppendInstruction(Instruction('LUI', ['r22', ord(node.value[1])], '    load Constant char'))
+            self.Assembly.AppendInstruction(Instruction('LLI', ['r22', ord(node.value[1])], '    load Constant char'))
             self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r22'], 'move to expected position'))
             return Type('char')
         elif floating:
