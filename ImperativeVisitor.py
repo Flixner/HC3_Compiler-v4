@@ -107,7 +107,8 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                 self.Assembly.AppendAssembly(operationAssembly)
                 #Cast short to char if variable is char
                 if v['Variable'].Type.IsChar():
-                    cast_short_to_char()
+                    castassembly = cast_short_to_char()
+                    self.Assembly.AppendAssembly(castassembly)
             else:
                 if v['Variable'].Type.IsFloating():
                     raise Exception(
@@ -786,6 +787,7 @@ def Arithmetic_Offset_Remove(NodeDepth):
     return None
 
 def cast_short_to_char():
-    assembly = Assembly()
-    assembly.AppendInstruction(Instruction('SLOI', ['r10', 8], "    Cast short to char"))
-    assembly.AppendInstruction(Instruction('SARIR', ['r10', 8], "    Cast short to char"))
+    assem = Assembly()
+    assem.AppendInstruction(Instruction('SLOI', ['r10', '8'], '    Cast short to char'))
+    assem.AppendInstruction(Instruction('SARIR', ['r10', '8'], '    Cast short to char'))
+    return assem

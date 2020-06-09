@@ -26,7 +26,7 @@ main:
 	LUI r22 0xFFDF ;		initialise STACK
 	LLI r22 0xFFDF ;		
 	MOV r1 r22 ;		
-	SUBI r1 3 ;		    reserve space for local variables on stack
+	SUBI r1 2 ;		    reserve space for local variables on stack
 	LUI r22 104 ;		    load Constant char
 	LLI r22 104 ;		    load Constant char
 	MOV r10 r22 ;		move to expected position
@@ -39,23 +39,17 @@ main:
 	MOV r15 r1 ;		calculate Adress of
 	ADDI r15 2 ;		y in Compound 1
 	STORE r10 r15 ;		and store result
-	LUI r22 51 ;		    load Constant char
-	LLI r22 51 ;		    load Constant char
+	LUI r22 10 ;		    load Constant
+	LLI r22 10 ;		    load Constant
 	MOV r10 r22 ;		move to expected position
 	MOV r15 r1 ;		calculate Adress of
-	ADDI r15 3 ;		v in Compound 1
+	ADDI r15 2 ;		y in Compound 1
+	MOV r12 r10 ;		Move to InputB
+	LOAD r10 r15 ;		Load Variable
+	ADD r10 r12 ;		add source B
+	SLOI r10 8 ;		    Cast short to char
+	SARIR r10 8 ;		    Cast short to char
 	STORE r10 r15 ;		and store result
-	SUBI r1 2 ;		 GOTO Arguments
-	LUI r22 3 ;		    load Constant
-	LLI r22 3 ;		    load Constant
-	MOV r10 r22 ;		move to expected position
-	STORE r10 r1 ;		 PARA0 => local variable 'a'
-	SUBI r1 1 ;		 GOTO Next Parameter
-	ADDI r1 3 ;		 GOTO FuncCall
-	LUI r22 test ;		r22 = &functionName
-	LLI r22 test ;		
-	JL r3 r22 ;		jump to function
-	MOV r10 r4 ;		r10 = functionResult
 	LUI r22 0 ;		    load Constant
 	LLI r22 0 ;		    load Constant
 	MOV r10 r22 ;		move to expected position
