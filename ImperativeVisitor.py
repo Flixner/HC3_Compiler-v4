@@ -105,6 +105,9 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                     raise Exception(str(node.coord) + ": ERROR: invalid Assignment operator: '" + node.name + "'")
             if operationAssembly != None:
                 self.Assembly.AppendAssembly(operationAssembly)
+                #Cast short to char if variable is char
+                if v['Variable'].Type.IsChar():
+                    cast_short_to_char()
             else:
                 if v['Variable'].Type.IsFloating():
                     raise Exception(
@@ -784,5 +787,5 @@ def Arithmetic_Offset_Remove(NodeDepth):
 
 def cast_short_to_char():
     assembly = Assembly()
-    assembly.AppendInstruction(Instruction('SLOI', ['r10', 24], "    Cast short to char"))
-    assembly.AppendInstruction(Instruction('SARIR', ['r10', 24], "    Cast short to char"))
+    assembly.AppendInstruction(Instruction('SLOI', ['r10', 8], "    Cast short to char"))
+    assembly.AppendInstruction(Instruction('SARIR', ['r10', 8], "    Cast short to char"))
