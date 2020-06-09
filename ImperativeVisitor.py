@@ -8,6 +8,7 @@ def float16_to_binint(val):
     """ https://en.wikipedia.org/wiki/Half-precision_floating-point_format# """
     return np.float16(val).view('H')
 
+
 class ImperativeVisitor(c_ast.NodeVisitor):
     """Converts a pure Imperative SyntaxTree (C-Code Segment) to Assembly"""
 
@@ -780,3 +781,8 @@ def Arithmetic_Offset_Remove(NodeDepth):
             Instruction('ADDI', ['r1', str(NodeDepth - i * 32)], "    Remove Arithmetic offset"))
         return assembly
     return None
+
+def cast_short_to_char():
+    assembly = Assembly()
+    assembly.AppendInstruction(Instruction('SLOI', ['r10', 24], "    Cast short to char"))
+    assembly.AppendInstruction(Instruction('SARIR', ['r10', 24], "    Cast short to char"))
