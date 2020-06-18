@@ -245,11 +245,9 @@ class ImperativeVisitor(c_ast.NodeVisitor):
             else if incomingType.Char():{
                 raise Exception(str(node.coord) + ": ERROR: Invalid char operation '" + node.op + "'")
             else{
-               self.Assembly.AppendInstruction(
-                Instruction('BZ', ['r10', Label.FromCoord(node.coord, 'inFalse').Name], 'jump if input was false'))
+               self.Assembly.AppendInstruction(Instruction('BZ', ['r10', Label.FromCoord(node.coord, 'inFalse').Name], 'jump if input was false'))
                 self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r0'], 'returns false forinput true'))
-                self.Assembly.AppendInstruction(
-                Instruction('BZ', ['r0', Label.FromCoord(node.coord, 'end').Name], 'work is done'))
+                self.Assembly.AppendInstruction(Instruction('BZ', ['r0', Label.FromCoord(node.coord, 'end').Name], 'work is done'))
                 self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'inFalse'))
                 self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r0'], 'result = TRUE'))
                 self.Assembly.AppendInstruction(Instruction('ADDI', ['r10', '1'], ''))
