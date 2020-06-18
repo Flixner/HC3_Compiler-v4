@@ -166,7 +166,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                 self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'the Variable at the address'))
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['f0', 1],     'Decrement for usage'))
                 return Type('float')
-            else if incomingType.IsChar() == 'char':
+            elif incomingType.IsChar() == 'char':
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['r10', 1],     'Increment'))
                 self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'the Variable at the address'))
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['r10', 1],     'Decrement for usage'))
@@ -184,7 +184,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['f0', 1],     'Increment'))
                 self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'the Variable at the address'))
                 return Type('float')
-            else if incomingType.IsChar() == 'char':
+            elif incomingType.IsChar() == 'char':
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['r10', 1],     'Increment'))
                 self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'the Variable at the address'))
                 self.Assembly.AppendsInstruction(Instruction('LUI', ['r22', ord(node.value[1])], '    load Constant char'))
@@ -201,7 +201,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                 self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'the Variable at the address'))
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['f0', 1],     'Increment for usage'))
                 return Type('float')
-            else if incomingType.IsChar() == 'char':
+            elif incomingType.IsChar() == 'char':
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['r10', 1],     'Decrement'))
                 self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'the Variable at the address'))
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['r10', 1],     'Increment for usage'))
@@ -219,7 +219,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['f0', 1],     'Decrement'))
                 self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'the Variable at the address'))
                 return Type('float')
-            else if incomingType.IsChar() == 'char':
+            elif incomingType.IsChar() == 'char':
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['r10', 1],     'Decrement'))
                 self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'the Variable at the address'))
                 self.Assembly.AppendsInstruction(Instruction('LUI', ['r22', ord(node.value[1])], '    load Constant char'))
@@ -233,7 +233,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         elif node.op == '~':
             if incomingType.IsFloating():
                 raise Exception(str(node.coord) + ": ERROR: Invalid floating point operation '" + node.op + "'")
-            else if incomingType.Char():{
+            elif incomingType.Char():{
                 raise Exception(str(node.coord) + ": ERROR: Invalid char operation '" + node.op + "'")
             else{
                self.Assembly.AppendInstruction(Instruction('NOT', ['r10'], 'exec bitwise not'))
@@ -242,7 +242,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         elif node.op == '!':
             if incomingType.IsFloating():
                 raise Exception(str(node.coord) + ": ERROR: Invalid floating point operation '" + node.op + "'")
-            else if incomingType.Char():{
+            elif incomingType.Char():{
                 raise Exception(str(node.coord) + ": ERROR: Invalid char operation '" + node.op + "'")
             else{
                self.Assembly.AppendInstruction(Instruction('BZ', ['r10', Label.FromCoord(node.coord, 'inFalse').Name], 'jump if input was false'))
