@@ -105,10 +105,6 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                     raise Exception(str(node.coord) + ": ERROR: invalid Assignment operator: '" + node.name + "'")
             if operationAssembly != None:
                 self.Assembly.AppendAssembly(operationAssembly)
-                #Cast short to char if variable is char
-                if v['Variable'].Type.IsChar():
-                    castassembly = cast_short_to_char()
-                    self.Assembly.AppendAssembly(castassembly)
             else:
                 if v['Variable'].Type.IsFloating():
                     raise Exception(
@@ -119,6 +115,10 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         if v['Variable'].Type.IsFloating():  # Storing
             self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'and store result'))
         else:
+            #Cast short to char if variable is char
+            if v['Variable'].Type.IsChar():
+                castassembly = cast_short_to_char()
+                self.Assembly.AppendAssembly(castassembly)
             self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'and store result'))
 
         d = Arithmetic_Offset_Add(self.NodeDepth)
