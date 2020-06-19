@@ -4,9 +4,10 @@ short test(short a){
 }
 short main()
 {
-    char z = 'h';
-    char y = 30;
+    char z;
+    short y = 30;
+    short d = 3;
 
-    y += 10;
+    z = y + d;
     return 0;
 }

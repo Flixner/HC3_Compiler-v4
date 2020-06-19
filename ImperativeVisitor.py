@@ -105,10 +105,6 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                     raise Exception(str(node.coord) + ": ERROR: invalid Assignment operator: '" + node.name + "'")
             if operationAssembly != None:
                 self.Assembly.AppendAssembly(operationAssembly)
-                #Cast short to char if variable is char
-                if v['Variable'].Type.IsChar():
-                    castassembly = cast_short_to_char()
-                    self.Assembly.AppendAssembly(castassembly)
             else:
                 if v['Variable'].Type.IsFloating():
                     raise Exception(
@@ -119,6 +115,10 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         if v['Variable'].Type.IsFloating():  # Storing
             self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'and store result'))
         else:
+            #Cast short to char if variable is char
+            if v['Variable'].Type.IsChar():
+                castassembly = cast_short_to_char()
+                self.Assembly.AppendAssembly(castassembly)
             self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'and store result'))
 
         d = Arithmetic_Offset_Add(self.NodeDepth)
@@ -233,7 +233,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         elif node.op == '~':
             if incomingType.IsFloating():
                 raise Exception(str(node.coord) + ": ERROR: Invalid floating point operation '" + node.op + "'")
-            else if incomingType.Char():{
+            elif incomingType.Char():{
                 raise Exception(str(node.coord) + ": ERROR: Invalid char operation '" + node.op + "'")
             else{
                self.Assembly.AppendInstruction(Instruction('NOT', ['r10'], 'exec bitwise not'))
@@ -242,7 +242,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         elif node.op == '!':
             if incomingType.IsFloating():
                 raise Exception(str(node.coord) + ": ERROR: Invalid floating point operation '" + node.op + "'")
-            else if incomingType.Char():{
+            elif incomingType.Char():{
                 raise Exception(str(node.coord) + ": ERROR: Invalid char operation '" + node.op + "'")
             else{
                self.Assembly.AppendInstruction(Instruction('BZ', ['r10', Label.FromCoord(node.coord, 'inFalse').Name], 'jump if input was false'))
