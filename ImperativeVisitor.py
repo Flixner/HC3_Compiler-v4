@@ -236,10 +236,10 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         elif node.op == '!':
             if incomingType.IsFloating():
                 raise Exception(str(node.coord) + ": ERROR: Invalid floating point operation '" + node.op + "'")
-            elif incomingType.Char():{
+            elif incomingType.Char():
                 raise Exception(str(node.coord) + ": ERROR: Invalid char operation '" + node.op + "'")
-            else{
-               self.Assembly.AppendInstruction(Instruction('BZ', ['r10', Label.FromCoord(node.coord, 'inFalse').Name], 'jump if input was false'))
+            else:
+                self.Assembly.AppendInstruction(Instruction('BZ', ['r10', Label.FromCoord(node.coord, 'inFalse').Name], 'jump if input was false'))
                 self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r0'], 'returns false forinput true'))
                 self.Assembly.AppendInstruction(Instruction('BZ', ['r0', Label.FromCoord(node.coord, 'end').Name], 'work is done'))
                 self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'inFalse'))
@@ -247,7 +247,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                 self.Assembly.AppendInstruction(Instruction('ADDI', ['r10', '1'], ''))
                 self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'end'))
                 return Type('short')
-            }
+            
         else:
             raise Exception(str(node.coord) + ": ERROR: Unknown unary operation '" + str(node.op) + "'")
 
