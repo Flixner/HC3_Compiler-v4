@@ -1,5 +1,5 @@
-short test(short a){
-    return 1;
+char test(short a){
+    return 123;
 }
 short main()
 {

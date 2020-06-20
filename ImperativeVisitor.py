@@ -168,6 +168,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                 self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'the Variable at the address'))
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['f0', 1],     'Decrement for usage'))
                 return Type('float')
+
             elif incomingType.IsChar():
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['r10', 1],     'Increment'))
                 self.Assembly.AppendAssembly(cast_short_to_char())
@@ -235,16 +236,18 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         elif node.op == '!':
             if incomingType.IsFloating():
                 raise Exception(str(node.coord) + ": ERROR: Invalid floating point operation '" + node.op + "'")
-            self.Assembly.AppendInstruction(
-                Instruction('BZ', ['r10', Label.FromCoord(node.coord, 'inFalse').Name], 'jump if input was false'))
-            self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r0'], 'returns false forinput true'))
-            self.Assembly.AppendInstruction(
-                Instruction('BZ', ['r0', Label.FromCoord(node.coord, 'end').Name], 'work is done'))
-            self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'inFalse'))
-            self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r0'], 'result = TRUE'))
-            self.Assembly.AppendInstruction(Instruction('ADDI', ['r10', '1'], ''))
-            self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'end'))
-            return Type('short')
+            elif incomingType.Char():{
+                raise Exception(str(node.coord) + ": ERROR: Invalid char operation '" + node.op + "'")
+            else{
+               self.Assembly.AppendInstruction(Instruction('BZ', ['r10', Label.FromCoord(node.coord, 'inFalse').Name], 'jump if input was false'))
+                self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r0'], 'returns false forinput true'))
+                self.Assembly.AppendInstruction(Instruction('BZ', ['r0', Label.FromCoord(node.coord, 'end').Name], 'work is done'))
+                self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'inFalse'))
+                self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r0'], 'result = TRUE'))
+                self.Assembly.AppendInstruction(Instruction('ADDI', ['r10', '1'], ''))
+                self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'end'))
+                return Type('short')
+            }
         else:
             raise Exception(str(node.coord) + ": ERROR: Unknown unary operation '" + str(node.op) + "'")
 
