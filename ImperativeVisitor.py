@@ -40,6 +40,8 @@ class ImperativeVisitor(c_ast.NodeVisitor):
             else:
                 if node.type == 'float':
                     self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'f0'], 'force cast by Hardware'))
+                elif node.type == 'char':
+                    self.Assembly.AppendAssembly(cast_short_to_char())
                 self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'and store result'))
 
     def visit_Assignment(self, node):
@@ -160,36 +162,33 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         if incomingType.IsVoid():
             raise Exception(str(node.coord) + ": ERROR: cant calculate with void")
 
-        if node.op == 'p++':
+        if node.op == 'p++': #z.B var++;
             if incomingType.IsFloating():
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['f0', 1],     'Increment'))
                 self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'the Variable at the address'))
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['f0', 1],     'Decrement for usage'))
                 return Type('float')
-            else if incomingType.IsChar() == 'char':
-                self.Assembly.AppendInstruction(Instruction('ADDI',  ['r22', 1],     'Increment'))
-                self.Assembly.AppendInstruction(Instruction('STORE', ['r22', 'r15'], 'the Variable at the address'))
-                self.Assembly.AppendInstruction(Instruction('SUBI',  ['r22', 1],     'Decrement for usage'))
-                self.Assembly.AppendsInstruction(Instruction('LUI', ['r22', ord(node.value[1])], '    load Constant char'))
-                self.Assembly.AppendInstruction(Instruction('SARIR', ['r10', '8'], '    Cast short to char'))
-                self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r22'], 'move to expected position'))
+
+            elif incomingType.IsChar():
+                self.Assembly.AppendInstruction(Instruction('ADDI',  ['r10', 1],     'Increment'))
+                self.Assembly.AppendAssembly(cast_short_to_char())
+                self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'the Variable at the address'))
+                self.Assembly.AppendInstruction(Instruction('SUBI',  ['r10', 1],     'Decrement for usage'))
                 return Type('char')
             else:
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['r10', 1],     'Increment'))
                 self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'the Variable at the address'))
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['r10', 1],     'Decrement for usage'))
                 return Type('short')
-        elif node.op == '++':
+        elif node.op == '++': #z.B. ++var;
             if incomingType.IsFloating():
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['f0', 1],     'Increment'))
                 self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'the Variable at the address'))
                 return Type('float')
-            else if incomingType.IsChar() == 'char':
-                self.Assembly.AppendInstruction(Instruction('ADDI',  ['r22', 1],     'Increment'))
-                self.Assembly.AppendInstruction(Instruction('STORE', ['r22', 'r15'], 'the Variable at the address'))
-                self.Assembly.AppendsInstruction(Instruction('LUI', ['r22', ord(node.value[1])], '    load Constant char'))
-                self.Assembly.AppendInstruction(Instruction('SARIR', ['r10', '8'], '    Cast short to char'))
-                self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r22'], 'move to expected position'))
+            elif incomingType.IsChar():
+                self.Assembly.AppendInstruction(Instruction('ADDI',  ['r10', 1],     'Increment'))
+                self.Assembly.AppendAssembly(cast_short_to_char())
+                self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'the Variable at the address'))
                 return Type('char')
             else:
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['r10', 1],     'Increment'))
@@ -201,13 +200,11 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                 self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'the Variable at the address'))
                 self.Assembly.AppendInstruction(Instruction('ADDI',  ['f0', 1],     'Increment for usage'))
                 return Type('float')
-            else if incomingType.IsChar() == 'char':
-                self.Assembly.AppendInstruction(Instruction('SUBI',  ['r22', 1],     'Decrement'))
-                self.Assembly.AppendInstruction(Instruction('STORE', ['r22', 'r15'], 'the Variable at the address'))
-                self.Assembly.AppendInstruction(Instruction('ADDI',  ['r22', 1],     'Increment for usage'))
-                self.Assembly.AppendsInstruction(Instruction('LUI', ['r22', ord(node.value[1])], '    load Constant char'))
-                self.Assembly.AppendInstruction(Instruction('SARIR', ['r10', '8'], '    Cast short to char'))
-                self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r22'], 'move to expected position'))
+            elif incomingType.IsChar():
+                self.Assembly.AppendInstruction(Instruction('SUBI',  ['r10', 1],     'Decrement'))
+                self.Assembly.AppendAssembly(cast_short_to_char())
+                self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'the Variable at the address'))
+                self.Assembly.AppendInstruction(Instruction('ADDI',  ['r10', 1],     'Increment for usage'))
                 return Type('char')
             else:
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['r10', 1],     'Decrement'))
@@ -219,12 +216,10 @@ class ImperativeVisitor(c_ast.NodeVisitor):
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['f0', 1],     'Decrement'))
                 self.Assembly.AppendInstruction(Instruction('STORE', ['f0', 'r15'], 'the Variable at the address'))
                 return Type('float')
-            else if incomingType.IsChar() == 'char':
-                self.Assembly.AppendInstruction(Instruction('SUBI',  ['r22', 1],     'Decrement'))
-                self.Assembly.AppendInstruction(Instruction('STORE', ['r22', 'r15'], 'the Variable at the address'))
-                self.Assembly.AppendsInstruction(Instruction('LUI', ['r22', ord(node.value[1])], '    load Constant char'))
-                self.Assembly.AppendInstruction(Instruction('SARIR', ['r10', '8'], '    Cast short to char'))
-                self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r22'], 'move to expected position'))
+            elif incomingType.IsChar():
+                self.Assembly.AppendInstruction(Instruction('SUBI',  ['r10', 1],     'Decrement'))
+                self.Assembly.AppendAssembly(cast_short_to_char())
+                self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], 'the Variable at the address'))
                 return Type('char')
             else:
                 self.Assembly.AppendInstruction(Instruction('SUBI',  ['r10', 1],     'Decrement'))
@@ -233,12 +228,11 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         elif node.op == '~':
             if incomingType.IsFloating():
                 raise Exception(str(node.coord) + ": ERROR: Invalid floating point operation '" + node.op + "'")
-            elif incomingType.Char():{
-                raise Exception(str(node.coord) + ": ERROR: Invalid char operation '" + node.op + "'")
-            else{
-               self.Assembly.AppendInstruction(Instruction('NOT', ['r10'], 'exec bitwise not'))
-               return Type('short')
-            }
+            self.Assembly.AppendInstruction(Instruction('NOT', ['r10'], 'exec bitwise not'))
+            if incomingType.IsChar():
+                self.Assembly.AppendAssembly(cast_short_to_char())
+                return Type('char')
+            return Type('short')
         elif node.op == '!':
             if incomingType.IsFloating():
                 raise Exception(str(node.coord) + ": ERROR: Invalid floating point operation '" + node.op + "'")
@@ -354,7 +348,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
         floating = ('.' in node.value) or ('f' in node.value)
         if node.type == 'char':
             self.Assembly.AppendInstruction(Instruction('LUI', ['r22', ord(node.value[1])], '    load Constant char'))
-            self.Assembly.AppendInstruction(Instruction('SARIR', ['r10', '8'], '    Cast short to char'))
+            self.Assembly.AppendInstruction(Instruction('SLOIR', ['r10', '8'], '    Cast short to char'))
             self.Assembly.AppendInstruction(Instruction('MOV', ['r10', 'r22'], 'move to expected position'))
             return Type('char')
         elif floating:
@@ -824,6 +818,6 @@ def Arithmetic_Offset_Remove(NodeDepth):
 
 def cast_short_to_char():
     assem = Assembly()
-    assem.AppendInstruction(Instruction('SLOI', ['r10', '8'], '    Cast short to char'))
-    assem.AppendInstruction(Instruction('SARIR', ['r10', '8'], '    Cast short to char'))
+    assem.AppendInstruction(Instruction('SLOI', ['r10', '8'], '    Cast short to char'))#shift links
+    assem.AppendInstruction(Instruction('SLOIR', ['r10', '8'], '    Cast short to char'))#shift rechts
     return assem

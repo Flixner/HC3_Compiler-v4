@@ -3,10 +3,10 @@ char test(short a){
 }
 short main()
 {
-    char z;
-    short y = 30;
-    short d = 3;
+    char z = 0;
+    char y = 20;
+    z++;
+    ++y;
 
-    z = y + d;
     return 0;
 }
