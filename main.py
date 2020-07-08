@@ -11,20 +11,13 @@ from AssemblyGenerator import *
 import PreProcessor
 
 def main():
-    
-    #Nur für testzwecke auskommentiert 
-    """ if len(sys.argv) == 3:
+     
+    if len(sys.argv) == 3:
         optimisation_level = sys.argv[1]
         input_file_path = sys.argv[2]
     else:
         print('ERROR: invalid number of arguments - use main.py <optimization level> <input file>\n')
         return
- """
-    #Nur für Testzwecke
-    #--------------------------------------------------
-    optimisation_level = 0
-    input_file_path = "testfiles/test_compilerSimple.c"
-    #--------------------------------------------------
 
     if not input_file_path.endswith('.c'):
         print('ERROR: invalid Filetype - only .c allowed\n')
