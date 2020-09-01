@@ -492,12 +492,49 @@ class ImperativeVisitor(c_ast.NodeVisitor):
             return Type('short')
         elif node.name.name == 'GetKEY1':
             if node.args is not None:
-                if len(node.args.exprs) != 0:
+                if len(node.args.exprs) != 1:
                     raise Exception(str(node.coord) + ": ERROR: too many arguments to function'" + node.name.name + "'")
             self.Assembly.AppendInstruction(Instruction('ADDI', ['r8', 2], '    GOTO KEY1'))
             self.Assembly.AppendInstruction(Instruction('LOAD', ['r10', 'r8'], 'get KEY1'))
             self.Assembly.AppendInstruction(Instruction('SUBI', ['r8', 2], '    GOTO SW'))
             return Type('short')
+        elif node.name.name == 'putChar':
+            if len(node.args.exprs) != 1:
+                raise Exception(str(node.coord) + ": ERROR: too many arguments to function'" + node.name.name + "'")
+
+            v = self.visit(node.args.exprs[0])  # ergebnis in r10 or f0
+            self.Assembly.AppendInstruction(Instruction('ADDI', ['r7', 12], '    GOTO VGA'))
+            self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r7'], 'set new Char to screen'))
+            self.Assembly.AppendInstruction(Instruction('SUBI', ['r7', 12], '    GOTO LEDR'))
+            return Type('void')
+        elif node.name.name == 'getChar':
+            if node.args is not None:
+                if len(node.args.exprs) != 0:
+                    raise Exception(str(node.coord) + ": ERROR: too many arguments to function'" + node.name.name + "'")
+            
+            # self.Assembly.AppendInstruction(Instruction('MOV', ['r15', 'r1'], ''))
+            # self.Assembly.AppendInstruction(Instruction('ADDI', ['r15', 3], ''))
+            # self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], ''))
+
+            #Vorbereitungscode für die Busy Wait schleife
+            self.Assembly.AppendInstruction(Instruction('ADDI', ['r8', 4], '    GOTO Keyboard'))
+            self.Assembly.AppendInstruction(Instruction('STORE', ['r0', 'r8'], ''))
+            
+            # #Schleifen Code zyklische Abfrage ob Send Signal == 1 ist
+            self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'begin'))
+            loop_start_label = Label.FromCoord(node.coord, 'begin').Name
+            self.Assembly.AppendInstruction(Instruction('LOAD', ['r10', 'r8'], 'prepare Keyboard'))
+            #Sprung code
+            self.Assembly.AppendInstruction(Instruction('BPOS', ['r10', Label.FromCoord(node.coord, 'end').Name], 'if new char is avalible -> exit loop'))
+            self.Assembly.AppendInstruction(Instruction('LUI', ['r22', loop_start_label], 'jump back to loop head'))
+            self.Assembly.AppendInstruction(Instruction('LLI', ['r22', loop_start_label], ''))
+            self.Assembly.AppendInstruction(Instruction('JL', ['r0', 'r22'], 'just jump'))
+            #Abschluss Code     
+            self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'end'))   
+            self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r8'], 'Schreibe wieder in den Speicher (prepare ende)'))    
+            self.Assembly.AppendInstruction(Instruction('SUBI', ['r8', 4], '    GOTO SW'))
+
+            return Type('char')
         else:
             # not build-in
 

@@ -15,6 +15,9 @@ def main():
     if len(sys.argv) == 3:
         optimisation_level = sys.argv[1]
         input_file_path = sys.argv[2]
+    elif len(sys.argv) == 1:
+        optimisation_level = 0
+        input_file_path = "main.c"
     else:
         print('ERROR: invalid number of arguments - use main.py <optimization level> <input file>\n')
         return

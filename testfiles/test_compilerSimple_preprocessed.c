@@ -1,4 +1,4 @@
-#line 1 "testfiles/test_CompilerSimple.c"
+#line 8 "testfiles/test_compilerSimple.c"
 short main()
 {
     short z0;
@@ -8,6 +8,9 @@ short main()
     char c1;
 
 while(i){
+
+
+
 
 
     z0 = 0x100;
@@ -25,13 +28,15 @@ while(i){
     }
 
 
+
+
+
     c0 = 0xFF;
-    if(c0){
+    if(c0++){
         SetLEDR(4);
     }else {
         SetLEDR(15);
     }
-    c0++;
     if(c0 == 0){
         SetLEDR(8);
     }else {
@@ -39,32 +44,21 @@ while(i){
     }
 
 
-    c0 = 'A';
-    erg = c0 - 0x41;
-    if(erg == 0){
+
+
+
+    c0 = 0x1;
+    if(c0--){
         SetLEDR(16);
     }else {
         SetLEDR(15);
     }
-
-
-    c0 += 2;
-    c1 = 'C';
-    erg = c0 - c1;
-    if(erg == 0){
-        SetLEDR(32);
-    }else {
-        SetLEDR(15);
-    }
-
-
-    c0 -= ('A' + 2);
     if(c0 == 0){
         SetLEDR(32);
     }else {
         SetLEDR(15);
     }
-
+#line 142 "testfiles/test_compilerSimple.c"
     SetLEDR(0xF00);
 }
 
