@@ -511,19 +511,15 @@ class ImperativeVisitor(c_ast.NodeVisitor):
             if node.args is not None:
                 if len(node.args.exprs) != 0:
                     raise Exception(str(node.coord) + ": ERROR: too many arguments to function'" + node.name.name + "'")
-            
-            # self.Assembly.AppendInstruction(Instruction('MOV', ['r15', 'r1'], ''))
-            # self.Assembly.AppendInstruction(Instruction('ADDI', ['r15', 3], ''))
-            # self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r15'], ''))
 
             #Vorbereitungscode für die Busy Wait schleife
             self.Assembly.AppendInstruction(Instruction('ADDI', ['r8', 4], '    GOTO Keyboard'))
-            self.Assembly.AppendInstruction(Instruction('STORE', ['r0', 'r8'], ''))
+            self.Assembly.AppendInstruction(Instruction('STORE', ['r0', 'r8'], 'Loesche Speicherzelle 0xFFEE'))
             
             # #Schleifen Code zyklische Abfrage ob Send Signal == 1 ist
             self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'begin'))
             loop_start_label = Label.FromCoord(node.coord, 'begin').Name
-            self.Assembly.AppendInstruction(Instruction('LOAD', ['r10', 'r8'], 'prepare Keyboard'))
+            self.Assembly.AppendInstruction(Instruction('LOAD', ['r10', 'r8'], 'Warte in einer Busy Loop auf ein neues Char in r8'))
             #Sprung code
             self.Assembly.AppendInstruction(Instruction('BPOS', ['r10', Label.FromCoord(node.coord, 'end').Name], 'if new char is avalible -> exit loop'))
             self.Assembly.AppendInstruction(Instruction('LUI', ['r22', loop_start_label], 'jump back to loop head'))
@@ -531,7 +527,7 @@ class ImperativeVisitor(c_ast.NodeVisitor):
             self.Assembly.AppendInstruction(Instruction('JL', ['r0', 'r22'], 'just jump'))
             #Abschluss Code     
             self.Assembly.AppendLabel(Label.FromCoord(node.coord, 'end'))   
-            self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r8'], 'Schreibe wieder in den Speicher (prepare ende)'))    
+            self.Assembly.AppendInstruction(Instruction('STORE', ['r10', 'r8'], 'Schreibe wieder in den Speicher'))    
             self.Assembly.AppendInstruction(Instruction('SUBI', ['r8', 4], '    GOTO SW'))
 
             return Type('char')
